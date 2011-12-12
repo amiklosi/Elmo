@@ -1,0 +1,17 @@
+- menu_active.set ("jobs")
+.hero-unit
+	h1= job.title
+	p= job.description
+	p
+		form(method="post", action="/job/run")
+			input(type="hidden", name="id", value=job._id)
+			input.btn.success.large(type="submit", value="Run")
+
+table
+	thead
+		tr
+			th Run
+	tbody
+		for run in runs
+			tr
+				td= run._id

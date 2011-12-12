@@ -1,0 +1,28 @@
+- menu_active.set ("jobs")
+.page-header
+	h1 Job.
+.row
+	.span4
+		h2 Fill it in
+		p Hello
+	.span12
+		form
+			fieldset
+				legend General
+				.clearfix
+					label(for="title") Title:
+					.input
+						input.xxlarge(type="text", name="title", value=job.title)
+				.clearfix
+					label(for="description") Description:
+					.input
+						textarea.xxlarge(name="title", rows="3")=job.description
+			fieldset
+				legend Steps
+				.clearfix
+					label(for="steps") Json
+					.input
+						textarea.xxlarge(name="steps", rows="12")=JSON.stringify(job.steps)
+			.actions
+				input.btn.primary(type="submit", value="Save")
+				input.btn(type="reset", value="Cancel")

@@ -1,0 +1,12 @@
+{
+	"name":"elmo",
+	"version":"0.0.1",
+	"dependencies":{
+		"underscore":"",
+		"mongoose":"",
+		"amqp":"",
+		"vows": "",
+		"express": "",
+		"jade": ""
+	}
+}

@@ -1,0 +1,10 @@
+{
+	"name":"elmo-agent",
+	"version":"0.0.1",
+	"dependencies":{
+		"underscore":"",
+		"mongodb":"",
+		"amqp":"",
+		"vows": ""
+	}
+}

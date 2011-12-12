@@ -1,0 +1,28 @@
+- menu_active.set ("jobs")
+.hero-unit
+	h1 Jobs.
+	p Your jobs and stuff
+
+table.zebra-striped
+	thead
+		tr
+			th State
+			th Title
+			th Actions
+	tbody
+		for job in jobs
+			tr
+				td
+					h3 &#10003; &#9747;
+				td=job.title
+				td.actions
+					form(method="post", action="/job/run")
+						input(type="hidden", name="id", value=job._id)
+						input.btn.primary(type="submit", value="Run")
+					a.btn(href="/job/"+job._id) View
+					a.btn(href="/job/edit/"+job._id) Edit
+					form(method="post", action="/job/delete")
+						input(type="hidden", name="id", value=job._id)
+						input.btn.error(type="submit", value="Delete")
+div.actions
+	a.btn.primary(href="") New Job

@@ -1,0 +1,27 @@
+!!! 5
+head
+	title Elmo!
+	link(rel="stylesheet/less", type="text/css", href="/lib/bootstrap/bootstrap.less")
+	link(rel="stylesheet/less", type="text/css", href="/style.less")
+	script(src="/lib/less-1.1.5.js")
+	script(src="/lib/jquery-1.7.js")
+	script(src="/lib/superagent.js")
+	script(src="/lib/underscore.js")
+	script(src="/elmo.js")
+
+body
+	.topbar
+		.fill
+			.container
+				a.brand Elmo
+				ul.nav
+					li(class= menu_active.get() == "" ? "active" : null )
+						a(href="/") Home
+					li(class= menu_active.get() == "jobs" ? "active" : null)
+						a(href="/job") Jobs
+
+	.container
+		.content
+			!=body
+			footer
+				p Here is the footseyer
