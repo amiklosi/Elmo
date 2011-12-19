@@ -1,0 +1,10 @@
+www:
+  type: nodejs
+  approot: www
+agent:
+  type: nodejs-worker
+  approot: agent
+data:
+  type: mongodb
+queue:
+  type: rabbitmq
