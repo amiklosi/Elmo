@@ -6,23 +6,23 @@
 		h2 Fill it in
 		p Hello
 	.span12
-		form(action="/job/edit/"+job.id, method="POST")
+		form(action="/job/new", method="POST")
 			fieldset
 				legend General
 				.clearfix
 					label(for="title") Title:
 					.input
-						input.xxlarge(type="text", name="title", value=job.title)
+						input.xxlarge(type="text", name="title", value=title)
 				.clearfix
 					label(for="description") Description:
 					.input
-						textarea.xxlarge(name="description", rows="3")=job.description
+						textarea.xxlarge(name="description", rows="3")=description
 			fieldset
 				legend Steps
 				.clearfix
 					label(for="steps") Json
 					.input
-						textarea.xxlarge(name="steps", rows="12")=JSON.stringify(job.steps)
+						textarea.xxlarge(name="steps", rows="12")=steps
 			.actions
 				input.btn.primary(type="submit", value="Save")
 				input.btn(type="reset", value="Cancel")

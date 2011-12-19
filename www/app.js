@@ -24,12 +24,16 @@ app.configure(function () {
 
 require("./route/www")(app);
 
-var model = require("./lib/model");
-var job = new model.Job();
-job.title = "Sample Job";
-job.description = "A Sample Job";
-job.steps.push({command: "date"});
-job.save();
+//var model = require("./lib/model");
+//var job = new model.Job();
+//job.title = "Sample Job";
+//job.description = "A Sample Job";
+//job.steps.push({command: "git clone git@github.com:jozefdransfield/Elmo.git"});
+//job.steps.push({command: "export PATH=$PATH:/Users/jozefdransfield/.nvm/v0.5.0/bin:/usr/bin:/bin:/usr/sbin"});
+//job.steps.push({command: "vows Elmo/agent/vows/agent-test.js"});
+//job.save();
+
+console.log(process.env);
 
 app.listen(8080);
 console.log("Server running at http://127.0.0.1:8080/");

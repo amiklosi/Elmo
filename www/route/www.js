@@ -14,6 +14,21 @@ module.exports = function (app) {
         });
     });
 
+    app.get("/job/new", function (req, res) {
+        res.render("job/new", {title:"", description:"", steps:""});
+    });
+
+    app.post("/job/new", function (req, res) {
+        var job = new model.Job();
+        job.title = req.param("title");
+        job.description = req.param("description");
+        job.steps = JSON.parse(req.param("steps"));
+        job.save(function (err, job) {
+            res.redirect("/job/" + job._id);
+        });
+
+    });
+
     app.get('/job/:id', function (req, res) {
         model.Job.findById(req.param("id"), function (err, job) {
             var runs = model.Run.find({ 'job':job._id }, function (err, runs) {
@@ -25,6 +40,16 @@ module.exports = function (app) {
     app.get('/job/edit/:id', function (req, res) {
         model.Job.findById(req.param("id"), function (err, job) {
             res.render("job/edit", {job:job})
+        });
+    });
+
+    app.post('/job/edit/:id', function (req, res) {
+        model.Job.findById(req.param("id"), function (err, job) {
+            job.title = req.param("title");
+            job.description = req.param("description");
+            job.steps = JSON.parse(req.param("steps"));
+            job.save();
+            res.redirect("/job/" + job.id);
         });
     });
 

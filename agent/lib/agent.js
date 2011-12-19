@@ -1,6 +1,6 @@
 var amqp = require('amqp');
 var events = require('events');
-var sys = require('sys');
+var sys = require('util');
 var exec = require('child_process').exec;
 var _ = require("underscore")._;
 
@@ -37,7 +37,7 @@ function AgentEventProcessor() {
         console.log("Running: ", message.runId);
         _(message.steps).each(function (step) {
             console.log("Step: ", step);
-            exec(step.command, function (error, stdout, stderr) {
+            exec(step.command, {cwd:"/Users/jozefdransfield/Desktop/work", env: process.env}, function (error, stdout, stderr) {
                 this_.emit("step", {runId: message.runId, stdout:stdout, stderr:stderr});
             });
         });
