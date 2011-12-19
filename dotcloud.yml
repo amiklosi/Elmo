@@ -2,7 +2,7 @@ www:
   type: nodejs
   approot: www
 agent:
-  type: nodejs-worker
+  type: node-worker
   approot: agent
 data:
   type: mongodb
