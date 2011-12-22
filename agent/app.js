@@ -8,8 +8,8 @@ var myAgent = new agent.Agent(new agent.AgentEventEmitter(), new agent.AgentEven
 
 console.log("Agent Started!");
 
-var http = require('http');
-http.createServer(function (req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Hello World\n');
-}).listen(8080, "127.0.0.1");
+//var http = require('http');
+//http.createServer(function (req, res) {
+//    res.writeHead(200, {'Content-Type': 'text/plain'});
+//    res.end('Hello World\n');
+//}).listen(8080, "127.0.0.1");

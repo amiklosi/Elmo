@@ -9,7 +9,7 @@ var _ = require("underscore")._;
 function AgentEventEmitter() {
     var this_ = this;
     events.EventEmitter.call(this_);
-    var connection = amqp.createConnection({ url:'amqp://guest:guest@localhost:5672' });
+    var connection = amqp.createConnection({ url: process.config.DOTCLOUD_QUEUE_AMQP_URL});
     connection.on('ready', function () {
         var runExchange = connection.exchange('run-default', {type:'fanout'});
         var q = connection.queue('my-queue', function () {
