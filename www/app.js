@@ -6,7 +6,8 @@ var config = require("../shared/lib/config");
 var app = express.createServer();
 process.config = new config.Config(["./www/config.json", "/home/dotcloud/environment.json"])
 
-mongoose.connect(process.config["DOTCLOUD_DATA_MONGODB_URL"]);
+console.log("Connecting to :", process.config["DOTCLOUD_DATA_MONGODB_URL"])
+mongoose.connect(process.config["DOTCLOUD_DATA_MONGODB_URL"]+"/elmo");
 
 app.set("views", __dirname + "/view")
 app.set("view engine", "jade")
