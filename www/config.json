@@ -1,0 +1,4 @@
+{
+	"DOTCLOUD_QUEUE_AMQP_URL":"amqp://guest:guest@localhost:5672",
+	"DOTCLOUD_DATA_MONGODB_URL":"mongodb://localhost/elmo"
+}

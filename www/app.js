@@ -4,9 +4,9 @@ var config = require("../shared/lib/config");
 
 
 var app = express.createServer();
-mongoose.connect("mongodb://localhost/elmo");
+process.config = new config.Config(["./www/config.json", "/home/dotcloud/environment.json"])
 
-var config = new config.Config(["config.json", "/home/dotcloud/environment.json"])
+mongoose.connect(process.config["DOTCLOUD_DATA_MONGODB_URL"]);
 
 app.set("views", __dirname + "/view")
 app.set("view engine", "jade")
@@ -23,17 +23,6 @@ app.configure(function () {
 });
 
 require("./route/www")(app);
-
-//var model = require("./lib/model");
-//var job = new model.Job();
-//job.title = "Sample Job";
-//job.description = "A Sample Job";
-//job.steps.push({command: "git clone git@github.com:jozefdransfield/Elmo.git"});
-//job.steps.push({command: "export PATH=$PATH:/Users/jozefdransfield/.nvm/v0.5.0/bin:/usr/bin:/bin:/usr/sbin"});
-//job.steps.push({command: "vows Elmo/agent/vows/agent-test.js"});
-//job.save();
-
-console.log(process.env);
 
 app.listen(8080);
 console.log("Server running at http://127.0.0.1:8080/");

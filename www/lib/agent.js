@@ -3,7 +3,7 @@ var model = require("./model");
 
 function AgentController() {
     var this_ = this;
-    var connection = amqp.createConnection({ url:'amqp://guest:guest@localhost:5672' });
+    var connection = amqp.createConnection({ url:process.config["DOTCLOUD_QUEUE_AMQP_URL"]});
     connection.on('ready', function () {
         var runExchange = connection.exchange('run-default', {type:'fanout'});
 
