@@ -38,7 +38,7 @@ function AgentEventProcessor() {
         console.log("Running: ", message.runId);
         _(message.steps).each(function (step) {
             console.log("Step: ", step);
-            exec(step.command, {cwd:"/Users/jozefdransfield/Desktop/work", env: process.env}, function (error, stdout, stderr) {
+            exec(step.command, {cwd:".", env: process.env}, function (error, stdout, stderr) {
                 this_.emit("step", {runId: message.runId, stdout:stdout, stderr:stderr});
             });
         });
