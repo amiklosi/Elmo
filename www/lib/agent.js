@@ -1,9 +1,11 @@
 var amqp = require("amqp");
 var model = require("./model");
 
+var config = process.vessel.dependsOn("config");
+
 function AgentController() {
     var this_ = this;
-    var connection = amqp.createConnection({ url:process.config["DOTCLOUD_QUEUE_AMQP_URL"]});
+    var connection = amqp.createConnection({ url:config["DOTCLOUD_QUEUE_AMQP_URL"]});
     connection.on('ready', function () {
         var runExchange = connection.exchange('run-default', {type:'fanout'});
 

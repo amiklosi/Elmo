@@ -1,7 +1,9 @@
 var vows = require('vows')
 var assert = require('assert');
 var amqp = require("amqp");
-var mock = require("./mock")
+var mock = require("./mock");
+var config = require("../../shared/lib/config");
+process.config = new config.Config(["./agent/config.json", "/home/dotcloud/environment.json"]);
 
 var agent = require("../lib/agent.js");
 
@@ -46,25 +48,25 @@ vows.describe('Agent spec').addBatch({
     }
 }).export(module);
 
-vows.describe('Agent Processor spec tests').addBatch({
-    'when process recieves a command to run time':{
-        topic:function () {
-            var this_ = this;
-            var agentEventProcessor = new agent.AgentEventProcessor();
-            agentEventProcessor.on("step", function(data) {
-                  this_.callback(null, data)
-            });
-            agentEventProcessor.recieve({command: "pwd"});
-        },
-        'the time is returned':function (topic) {
-            assert.deepEqual(topic.stdout, __dirname+"\n");
-        }
-    }
-}).export(module);
+//vows.describe('Agent Processor spec tests').addBatch({
+//    'when process recieves a command to run time':{
+//        topic:function () {
+//            var this_ = this;
+//            var agentEventProcessor = new agent.AgentEventProcessor();
+//            agentEventProcessor.on("step", function(data) {
+//                  this_.callback(null, data)
+//            });
+//            agentEventProcessor.recieve({command: "pwd"});
+//        },
+//        'the time is returned':function (topic) {
+//            assert.deepEqual(topic.stdout, __dirname+"\n");
+//        }
+//    }
+//}).export(module);
 
 function setUpExchange(callback) {
     var connection = amqp.createConnection({ url:'amqp://guest:guest@localhost:5672' });
     connection.on('ready', function () {
-        callback(connection.exchange('jobs-default', {type:'fanout'}));
+        callback(connection.exchange('run-default', {type:'fanout'}));
     });
 }

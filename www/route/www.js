@@ -1,7 +1,6 @@
 var model = require("../lib/model");
-var agent = require("../lib/agent");
 var property = require("../lib/property.js");
-var agentController = new agent.AgentController();
+var agentController = process.vessel.dependsOn("agent").AgentController();
 
 module.exports = function (app) {
     app.get('/', function (req, res) {

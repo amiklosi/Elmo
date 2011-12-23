@@ -1,5 +1,5 @@
 var config = require("../shared/lib/config");
-process.config = new config.Config(["./agent/config.json", "/home/dotcloud/environment.json"])
+process.config = new config.Config(["./agent/config.json", "/home/dotcloud/environment.json"]);
 
 var agent = require("./lib/agent");
 

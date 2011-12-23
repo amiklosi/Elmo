@@ -14,4 +14,5 @@ table
 	tbody
 		for run in runs
 			tr
-				td= run._id
+				td
+					a(href="/run/"+run._id)= Run

@@ -1,13 +1,23 @@
 var express = require("express");
 var mongoose = require("mongoose");
-var config = require("../shared/lib/config");
+var config = require("../shared/lib/config") ;
 
+var vessel = require("../shared/lib/vessel");
+process.vessel = vessel;
+vessel.put("config", function() {
+    return new config.Config(["./www/config.json", "/home/dotcloud/environment.json"])
+});
+vessel.put("agent", function() {
+    return require("./lib/agent")
+});
 
 var app = express.createServer();
-process.config = new config.Config(["./www/config.json", "/home/dotcloud/environment.json"])
 
-console.log("Connecting to :", process.config["DOTCLOUD_DATA_MONGODB_URL"])
-mongoose.connect(process.config["DOTCLOUD_DATA_MONGODB_URL"]+"/elmo");
+mongoose.connect(process.vessel.dependsOn("config")["DOTCLOUD_DATA_MONGODB_URL"]+"/elmo");
+
+var agent =
+
+    process.vessel = vessel;
 
 app.set("views", __dirname + "/view")
 app.set("view engine", "jade")
