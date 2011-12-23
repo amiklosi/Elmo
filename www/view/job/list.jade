@@ -13,16 +13,18 @@ table.zebra-striped
 		for job in jobs
 			tr
 				td
-					h3 &#10003; &#9747;
-				td=job.title
+					h3
+						span.status.success &#10003;
+						span.status.failure !
+				td
+					a(href="/job/"+job._id)=job.title
 				td.actions
 					form(method="post", action="/job/run")
 						input(type="hidden", name="id", value=job._id)
-						input.btn.primary(type="submit", value="Run")
-					a.btn(href="/job/"+job._id) View
-					a.btn(href="/job/edit/"+job._id) Edit
+						input.btn.success(type="submit", value="&raquo;")
+					a.btn(href="/job/edit/"+job._id) &#916;
 					form(method="post", action="/job/delete")
 						input(type="hidden", name="id", value=job._id)
-						input.btn.error(type="submit", value="Delete")
+						input.btn.error(type="submit", value="&times;")
 div.actions
-	a.btn.primary(href="/job/new") New Job
+	a.btn.primary(href="/job/new") +

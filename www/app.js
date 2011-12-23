@@ -4,12 +4,7 @@ var config = require("../shared/lib/config") ;
 
 var vessel = require("../shared/lib/vessel");
 process.vessel = vessel;
-vessel.put("config", function() {
-    return new config.Config(["./www/config.json", "/home/dotcloud/environment.json"])
-});
-vessel.put("agent", function() {
-    return require("./lib/agent")
-});
+vessel.put("config", new config.Config(["./www/config.json", "/home/dotcloud/environment.json"]) );
 
 var app = express.createServer();
 

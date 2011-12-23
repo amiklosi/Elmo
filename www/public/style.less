@@ -17,3 +17,39 @@ table {
 .btn {
             margin-left: 1em;
         }
+
+.topbar .fill {
+	background-color: #C43C35;
+	background-image: -webkit-linear-gradient(top, #C43C35, #882A25);
+	opacity: 0.9;   
+	a {
+		font-weight: bolder;
+	}
+}
+
+.status {
+	border-radius: 33px;
+	width: 36px;
+	border-width: 1pt;
+	border-style:solid;
+	display: inline-block;
+	text-align: center;
+color: white;
+	&.success {
+		background-color: #57A957;
+	}
+	&.failure {
+		background-color: #C43C35;
+	}
+	&.running {
+	         background-color: blue;
+	}
+}
+
+.status.big {
+	width: 97px;
+	height: 80px;
+border-radius: 49px;
+padding-top: 17px;
+padding-left: -5px
+}

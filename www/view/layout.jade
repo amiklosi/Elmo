@@ -13,10 +13,8 @@ body
 	.topbar
 		.fill
 			.container
-				a.brand Elmo
+				a.brand(href="/") elmo
 				ul.nav
-					li(class= menu_active.get() == "" ? "active" : null )
-						a(href="/") Home
 					li(class= menu_active.get() == "jobs" ? "active" : null)
 						a(href="/job") Jobs
 
