@@ -77,13 +77,14 @@ function Agent() {
         });
     });
 
-    // can add start here
-
+    agentEventProcessor.on("start", function (data) {
+        agentEventEmitter.trigger("start", data);
+    });
     agentEventProcessor.on("step", function (data) {
         agentEventEmitter.trigger("step", data);
     });
-    agentEventProcessor.on("done", function (data) {
-        agentEventEmitter.trigger("done", data);
+    agentEventProcessor.on("end", function (data) {
+        agentEventEmitter.trigger("end", data);
     })
 
 }

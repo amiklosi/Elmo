@@ -16,14 +16,19 @@ function AgentController() {
             q.subscribe(function (json, headers, deliveryInfo) {
                 console.log("json ", json);
                 model.Run.findById(json.runId, function (err, run) {
-                    console.log("run ", run);
-                    if (json.event == "step") {
-                        run.stdout = json.stdout;
-                        run.stderr = json.stderr;
+                    if (json.event == "start") {
+                        run.state = "running";
+                        run.save()
+                    } else if (json.event == "end") {
+                        run.state = "end";
+                        run.save();
                     } else {
-                        run.complete = true;
+                        var stepResult = new model.StepResult();
+                        stepResult.stdout = json.stdout;
+                        stepResult.stderr = json.stderr;
+                        run.steps.push(stepResult);
+                        run.save();
                     }
-                    run.save();
                 });
 
             });

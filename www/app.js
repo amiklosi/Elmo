@@ -3,16 +3,12 @@ var mongoose = require("mongoose");
 var config = require("../shared/lib/config") ;
 
 var vessel = require("../shared/lib/vessel");
-process.vessel = vessel;
+vessel.put("log", function() {return console.log})
 vessel.put("config", new config.Config(["./www/config.json", "/home/dotcloud/environment.json"]) );
 
 var app = express.createServer();
 
-mongoose.connect(process.vessel.require("config")["DOTCLOUD_DATA_MONGODB_URL"]+"/elmo");
-
-var agent =
-
-    process.vessel = vessel;
+mongoose.connect(vessel.require("config")["DOTCLOUD_DATA_MONGODB_URL"]+"/elmo");
 
 app.set("views", __dirname + "/view")
 app.set("view engine", "jade")

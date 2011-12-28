@@ -7,10 +7,15 @@
 		span Run.
 	p This run and stuff.
 
-fieldset
-	legend STDOUT
-	div=run.stdout
 
-fieldset
-	legend STDERR
-	div=run.stderr
+h1=run.state
+
+
+for step in run.steps
+	fieldset
+		legend STDOUT
+		div=step.stdout
+
+	fieldset
+		legend STDERR
+		div=step.stderr

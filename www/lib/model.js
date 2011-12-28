@@ -9,21 +9,26 @@ var jobSchema = new mongoose.Schema({
 });
 
 var stepSchema = new mongoose.Schema({
-    command: String
+    type: String,
+    body: String
 });
 
 var runSchema = new mongoose.Schema({
     job:String,
     date:Date,
-    complete:Boolean,
-
-    stdout: String,
-    stderr: String
-
+    state: String,
+    steps: [stepResultSchema]
 });
+
+var stepResultSchema = new mongoose.Schema({
+    stdout: String,
+    stderr: String,
+    state: Boolean
+})
 
 module.exports.Job = mongoose.model('Job', jobSchema);
 module.exports.Run = mongoose.model('Run', runSchema);
 module.exports.Step = mongoose.model('Step', stepSchema);
+module.exports.StepResult = mongoose.model('StepResult', stepResultSchema);
 
 
