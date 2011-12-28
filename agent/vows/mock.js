@@ -6,14 +6,14 @@ function AgentEventEmitter() {
 }
 sys.inherits(AgentEventEmitter, events.EventEmitter);
 
-function AgentEventProcessor() {
+function JobProcessor() {
     var this_ = this;
     events.EventEmitter.call(this);
     this.recieve = function (message) {
         this_.emit("message", message);
     }
 }
-sys.inherits(AgentEventProcessor, events.EventEmitter);
+sys.inherits(JobProcessor, events.EventEmitter);
 
 module.exports.AgentEventEmitter = AgentEventEmitter;
-module.exports.AgentEventProcessor = AgentEventProcessor;
+module.exports.JobProcessor = JobProcessor;

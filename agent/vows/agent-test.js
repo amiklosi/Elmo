@@ -3,9 +3,16 @@ var assert = require('assert');
 var amqp = require("amqp");
 var mock = require("./mock");
 var config = require("../../shared/lib/config");
-process.config = new config.Config(["./agent/config.json", "/home/dotcloud/environment.json"]);
+var vessel = require("../../shared/lib/vessel");
+var agent = require("../lib/agent");
+var _ = require("underscore")._;
 
-var agent = require("../lib/agent.js");
+vessel.put("log", function () {
+    return emptyFunction
+});
+vessel.put("config", function () {
+    return new config.Config(["./agent/config.json", "/home/dotcloud/environment.json"])
+});
 
 
 vows.describe('Messaging an AgentEventEmitter').addBatch({
@@ -18,13 +25,13 @@ vows.describe('Messaging an AgentEventEmitter').addBatch({
                     exchange.publish('test.message', {test:"message"});
                 });
             });
-            agentEventEmitter.on("message", function(message) {
+            agentEventEmitter.on("message", function (message) {
                 agentEventEmitter.end();
                 _this.callback(null, message)
             });
         },
         'we recieve the message':function (topic) {
-            assert.deepEqual(topic, {"test": "message"});
+            assert.deepEqual(topic, {"test":"message"});
         }
     }
 }).export(module);
@@ -33,40 +40,82 @@ vows.describe('Agent spec').addBatch({
     'when the event emitter sends a message it it passed onto the processors':{
         topic:function () {
             var this_ = this;
-            var agentEventEmitter = new mock.AgentEventEmitter();
-            var agentEventProcessor = new mock.AgentEventProcessor();
-            var myAgent = new agent.Agent(agentEventEmitter, agentEventProcessor);
-            agentEventProcessor.on("message", function(message) {
+            var agentEventEmitter = setupMockAgentEventEmitter();
+            var agentEventProcessor = setupMockJobProcessor();
+
+            var myAgent = new agent.Agent();
+            agentEventProcessor.on("message", function (message) {
                 this_.callback(null, message)
             });
             agentEventEmitter.emit("ready");
-            agentEventEmitter.emit("message", {"test": "message"})
+            agentEventEmitter.emit("message", {"test":"message"})
         },
         'the message is recieved by the processor':function (topic) {
-            assert.deepEqual(topic, {"test": "message"});
+            assert.deepEqual(topic, {"test":"message"});
         }
     }
 }).export(module);
 
-//vows.describe('Agent Processor spec tests').addBatch({
-//    'when process recieves a command to run time':{
-//        topic:function () {
-//            var this_ = this;
-//            var agentEventProcessor = new agent.AgentEventProcessor();
-//            agentEventProcessor.on("step", function(data) {
-//                  this_.callback(null, data)
-//            });
-//            agentEventProcessor.recieve({command: "pwd"});
-//        },
-//        'the time is returned':function (topic) {
-//            assert.deepEqual(topic.stdout, __dirname+"\n");
-//        }
-//    }
-//}).export(module);
+vows.describe('Agent Processor spec tests').addBatch({
+    'when processor recieves a unix command to run ':{
+        topic:function () {
+            var this_ = this;
+            var agentEventProcessor = new agent.JobProcessor();
+
+            var events = listenTo(agentEventProcessor, ["start", "step", "end"]);
+
+            agentEventProcessor.on("end", function (data) {
+                this_.callback(null, events)
+            });
+            agentEventProcessor.recieve({runId:"test", steps:[
+                {type:"application/x-sh", body:"echo 'testcomplete'"}
+            ]});
+        },
+        'the stdout is returned':function (topic) {
+            assert.deepEqual(topic[0].event, "start");
+            assert.deepEqual(topic[0].params.runId, "test");
+            assert.deepEqual(topic[1].event, "step");
+            assert.deepEqual(topic[1].params.stdout, "testcomplete\n");
+            assert.deepEqual(topic[2].event, "end");
+            assert.deepEqual(topic[2].params.runId, "test");
+        }
+    }, 'when given commands in order':{
+        topic:function () {
+            this.callback(null, null);
+        }, 'the commands are run sequentially':function (topic) {
+
+        }
+    }
+}).export(module);
 
 function setUpExchange(callback) {
     var connection = amqp.createConnection({ url:'amqp://guest:guest@localhost:5672' });
     connection.on('ready', function () {
         callback(connection.exchange('run-default', {type:'fanout'}));
     });
+}
+
+function setupMockAgentEventEmitter() {
+    var agentEventEmitter = new mock.AgentEventEmitter()
+    vessel.put("agentEventEmitter", agentEventEmitter);
+    return agentEventEmitter;
+}
+
+function setupMockJobProcessor() {
+    var jobProcessor = new mock.JobProcessor();
+    vessel.put("agentEventProcessor", jobProcessor);
+    return jobProcessor
+}
+
+function emptyFunction() {
+}
+
+function listenTo(eventEmitter, events) {
+    var recordedEvents = []
+    _(events).each(function (event) {
+        eventEmitter.on(event, function (params) {
+            recordedEvents.push({event:event, params:params});
+        })
+    });
+    return recordedEvents;
 }
