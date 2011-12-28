@@ -4,7 +4,7 @@ module.exports = {
     put: function(key, value) {
         entries[key] = value;
     },
-    dependsOn: function(key) {
+    require: function(key) {
         if (entries[key] instanceof Function) {
             return entries[key]()
         }

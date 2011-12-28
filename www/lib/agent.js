@@ -1,7 +1,8 @@
 var amqp = require("amqp");
 var model = require("./model");
+var vessel = require("../../shared/lib/vessel");
 
-var config = process.vessel.dependsOn("config");
+var config = vessel.require("config");
 
 function AgentController() {
     var this_ = this;

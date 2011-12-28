@@ -1,15 +1,13 @@
-var config = require("../shared/lib/config");
-process.config = new config.Config(["./agent/config.json", "/home/dotcloud/environment.json"]);
-
+var vessel = require("../shared/lib/vessel");
 var agent = require("./lib/agent");
+var config = require("../shared/lib/config");
 
+vessel.put("config", new config.Config(["./agent/config.json", "/home/dotcloud/environment.json"]));
+vessel.put("agentEventEmitter", new agent.AgentEventEmitter())
+vessel.put("agentEventProcessor", new agent.AgentEventProcessor())
+vessel.put("agent", new agent.Agent());
+vessel.put("workingDirectory", "/tmp/")
 
-var myAgent = new agent.Agent(new agent.AgentEventEmitter(), new agent.AgentEventProcessor())
+vessel.require("agent");
 
 console.log("Agent Started!");
-
-//var http = require('http');
-//http.createServer(function (req, res) {
-//    res.writeHead(200, {'Content-Type': 'text/plain'});
-//    res.end('Hello World\n');
-//}).listen(8080, "127.0.0.1");

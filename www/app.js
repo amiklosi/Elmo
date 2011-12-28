@@ -8,7 +8,7 @@ vessel.put("config", new config.Config(["./www/config.json", "/home/dotcloud/env
 
 var app = express.createServer();
 
-mongoose.connect(process.vessel.dependsOn("config")["DOTCLOUD_DATA_MONGODB_URL"]+"/elmo");
+mongoose.connect(process.vessel.require("config")["DOTCLOUD_DATA_MONGODB_URL"]+"/elmo");
 
 var agent =
 
