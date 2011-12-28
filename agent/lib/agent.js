@@ -41,8 +41,8 @@ function JobProcessor() {
         _(message.steps).each(function (step) {
             console.log("Step: ", step);
             var dirName = _.uniqueId();
-            fs.mkdir("/tmp/"+dirName, function () {
-                exec(step.command, {cwd:"/tmp/"+dirName, env:process.env}, function (error, stdout, stderr) {
+            fs.mkdir("~/"+dirName, function () {
+                exec(step.command, {cwd:"~/"+dirName, env:process.env}, function (error, stdout, stderr) {
                     this_.emit("step", {runId:message.runId, stdout:stdout, stderr:stderr});
                 });
             });
