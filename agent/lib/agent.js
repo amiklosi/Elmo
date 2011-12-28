@@ -41,7 +41,7 @@ function JobProcessor() {
         _(message.steps).each(function (step) {
             console.log("Step: ", step);
             var dirName = Math.random();
-            fs.mkdir("~/"+dirName, "0777", function (err) {
+            fs.mkdir("/home/dotcloud/"+dirName, "0777", function (err) {
                 console.log(err);
                 exec(step.command, {cwd:"~/"+dirName, env:process.env}, function (error, stdout, stderr) {
                     this_.emit("step", {runId:message.runId, stdout:stdout, stderr:stderr});
