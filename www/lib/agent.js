@@ -26,6 +26,7 @@ function AgentController() {
                         var stepResult = new model.StepResult();
                         stepResult.stdout = json.stdout;
                         stepResult.stderr = json.stderr;
+                        stepResult.success = json.success;
                         run.steps.push(stepResult);
                         run.save();
                     }

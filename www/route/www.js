@@ -2,6 +2,7 @@ var model = require("../lib/model");
 var property = require("../lib/property.js");
 var agent = require("../lib/agent");
 var agentController = new agent.AgentController();
+var _ = require("underscore")._;
 
 module.exports = function (app) {
     app.get('/', function (req, res) {
@@ -65,6 +66,7 @@ module.exports = function (app) {
             var run = new model.Run();
             run.job = job._id;
             run.date = new Date();
+            run.state = "pending";
             run.save(function (err) {
                 agentController.publish({runId:run._id, steps:job.steps});
                 res.redirect("/run/" + run._id);
@@ -74,7 +76,17 @@ module.exports = function (app) {
 
     app.get('/run/:id', function (req, res) {
         var run = model.Run.findById(req.param("id"), function (err, run) {
-            res.render("run/show", {run:run});
+            var state = run.state;
+            if (state == "end") {
+                if (_(run.steps).all(function(step) {
+                    return step.success;
+                })) {
+                    state= "success";
+                } else {
+                    state = "failure"
+                };
+            }
+            res.render("run/show", {run:run, state: state});
         });
     });
 

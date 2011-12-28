@@ -57,7 +57,11 @@ function toEmittingQueue(eventEmitter, message, directoryName, log) {
         queue.enqueue(function () {
             log("Step: ", step);
             exec(step.body, {cwd:directoryName, env:process.env}, function (error, stdout, stderr) {
-                eventEmitter.emit("step", {runId:message.runId, stdout:stdout, stderr:stderr});
+                var success = true;
+                if (error) {
+                    success = false
+                }
+                eventEmitter.emit("step", {runId:message.runId, stdout:stdout, stderr:stderr, success: success});
                 queue.next();
             });
         });

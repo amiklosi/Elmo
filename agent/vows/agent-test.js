@@ -94,7 +94,24 @@ vows.describe('Agent Processor spec tests').addBatch({
                 {type:"application/x-sh", body:"echo 'test2'"}
             ]});
         }, 'the commands are run sequentially':function (topic) {
-             console.log(topic);
+             assert.equal(topic[1].params.stdout, "test1\n")
+             assert.equal(topic[2].params.stdout, "test2\n")
+        }
+    }, 'when given an invalid command': {
+        topic: function() {
+            var this_ = this;
+            var agentEventProcessor = new agent.JobProcessor();
+
+            var events = listenTo(agentEventProcessor, ["start", "step", "end"]);
+
+            agentEventProcessor.on("end", function (data) {
+                this_.callback(null, events)
+            });
+            agentEventProcessor.recieve({runId:"test", steps:[
+                {type:"application/x-sh", body:"unknown"}
+            ]});
+        }, "the step is returned as failure": function(topic) {
+            assert.equal(topic[1].params.success, false);
         }
     }
 }).export(module);

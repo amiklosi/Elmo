@@ -23,7 +23,7 @@ var runSchema = new mongoose.Schema({
 var stepResultSchema = new mongoose.Schema({
     stdout: String,
     stderr: String,
-    state: Boolean
+    success: Boolean
 })
 
 module.exports.Job = mongoose.model('Job', jobSchema);

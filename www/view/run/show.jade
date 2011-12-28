@@ -1,21 +1,36 @@
 - menu_active.set ("jobs")
 .hero-unit
 	h1
-		span.status.success.big &#10003;
-		span.status.failure.big !
-		span.status.running.big &hellip;
+		if state == "success"
+			span.status.success.big &#10003;
+		else if state == "failure"
+			span.status.failure.big !
+		else if state == "pending"
+			span.status.running.big ?
+		else if state == "running"
+			span.status.running.big &hellip;
 		span Run.
 	p This run and stuff.
 
 
 h1=run.state
 
+table.zebra-striped
+	thead
+		tr
+			th State
+			th stdout
+			th stderr
+	tbody
+		for step in run.steps
+			tr
+				td
+					h3
+						if step.success
+							span.status.success &#10003;
+						else
+							span.status.failure !
+				td= step.stdout
+				td= step.stderr
 
-for step in run.steps
-	fieldset
-		legend STDOUT
-		div=step.stdout
 
-	fieldset
-		legend STDERR
-		div=step.stderr
