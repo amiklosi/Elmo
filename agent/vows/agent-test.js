@@ -81,9 +81,20 @@ vows.describe('Agent Processor spec tests').addBatch({
         }
     }, 'when given commands in order':{
         topic:function () {
-            this.callback(null, null);
-        }, 'the commands are run sequentially':function (topic) {
+            var this_ = this;
+            var agentEventProcessor = new agent.JobProcessor();
 
+            var events = listenTo(agentEventProcessor, ["start", "step", "end"]);
+
+            agentEventProcessor.on("end", function (data) {
+                this_.callback(null, events)
+            });
+            agentEventProcessor.recieve({runId:"test", steps:[
+                {type:"application/x-sh", body:"echo 'test1'"},
+                {type:"application/x-sh", body:"echo 'test2'"}
+            ]});
+        }, 'the commands are run sequentially':function (topic) {
+             console.log(topic);
         }
     }
 }).export(module);

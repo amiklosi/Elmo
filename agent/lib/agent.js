@@ -39,29 +39,31 @@ function JobProcessor() {
     var log = vessel.require("log");
     events.EventEmitter.call(this_);
     this.recieve = function (message) {
-        var dirName = Math.random();
-        fs.mkdir("/tmp/" + dirName, "0777", function (err) {
+        var dirName = "/tmp/" + Math.random();
+        fs.mkdir(dirName, "0777", function (err) {
             log("Running: ", message.runId);
-            this_.emit("start", {runId: message.runId});
-            runQueue = new queue.Queue();
-            _(message.steps).reduce(function (queue, step) {
-                queue.enqueue(function () {
-                    log("Step: ", step);
-                    exec(step.body, {cwd:"/tmp/" + dirName, env:process.env}, function (error, stdout, stderr) {
-                        this_.emit("step", {runId:message.runId, stdout:stdout, stderr:stderr});
-                        queue.next();
-                    });
-                })
-            }, runQueue);
+            this_.emit("start", {runId:message.runId});
+            var runQueue = _(message.steps).reduce(toEmittingQueue(this_, message, dirName, log), new queue.Queue());
             runQueue.enqueue(function () {
                 this_.emit("end", {runId:message.runId});
             })
-
             runQueue.next();
         });
     }
 }
 
+function toEmittingQueue(eventEmitter, message, directoryName, log) {
+    return function (queue, step) {
+        queue.enqueue(function () {
+            log("Step: ", step);
+            exec(step.body, {cwd:directoryName, env:process.env}, function (error, stdout, stderr) {
+                eventEmitter.emit("step", {runId:message.runId, stdout:stdout, stderr:stderr});
+                queue.next();
+            });
+        });
+        return queue;
+    }
+}
 
 
 sys.inherits(JobProcessor, events.EventEmitter);
