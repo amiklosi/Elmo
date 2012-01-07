@@ -68,7 +68,7 @@ module.exports = function (app) {
             run.date = new Date();
             run.state = "pending";
             run.save(function (err) {
-                agentController.publish({runId:run._id, steps:job.steps});
+                agentController.publish({jobId: run.job, runId:run._id, steps:job.steps});
                 res.redirect("/run/" + run._id);
             });
         });

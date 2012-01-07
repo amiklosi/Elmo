@@ -30,7 +30,9 @@ table.zebra-striped
 							span.status.success &#10003;
 						else
 							span.status.failure !
-				td= step.stdout
-				td= step.stderr
+				td
+					pre=step.stdout
+				td
+					pre=step.stderr
 
 

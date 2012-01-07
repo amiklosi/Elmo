@@ -6,6 +6,7 @@ var _ = require("underscore")._;
 var fs = require("fs");
 var vessel = require("../../shared/lib/vessel");
 var queue = require("../../shared/lib/queue");
+var vm = require('vm');
 
 
 function AgentEventEmitter() {
@@ -39,9 +40,10 @@ function JobProcessor() {
     var log = vessel.require("log");
     events.EventEmitter.call(this_);
     this.recieve = function (message) {
-        var dirName = "/tmp/" + Math.random();
+        var dirName = "/tmp/" + message.jobId;
         fs.mkdir(dirName, "0777", function (err) {
             log("Running: ", message.runId);
+            log("Job: ", message.jobId);
             this_.emit("start", {runId:message.runId});
             var runQueue = _(message.steps).reduce(toEmittingQueue(this_, message, dirName, log), new queue.Queue());
             runQueue.enqueue(function () {
@@ -56,16 +58,34 @@ function toEmittingQueue(eventEmitter, message, directoryName, log) {
     return function (queue, step) {
         queue.enqueue(function () {
             log("Step: ", step);
-            exec(step.body, {cwd:directoryName, env:process.env}, function (error, stdout, stderr) {
+            useExecutor(step, directoryName, function(error, stdout, stderr) {
                 var success = true;
                 if (error) {
                     success = false
                 }
-                eventEmitter.emit("step", {runId:message.runId, stdout:stdout, stderr:stderr, success: success});
+                eventEmitter.emit("step", {runId:message.runId, stdout: stdout, stderr: stderr, success: success});
                 queue.next();
             });
         });
         return queue;
+    }
+}
+
+function useExecutor(step, directoryName, callback) {
+    switch(step.type) {
+        case "macro":
+            require("../macro/git")(step, directoryName, callback);
+            break;
+        case "application/x-sh":
+            exec(step.body, {cwd:directoryName, env:process.env}, function (error, stdout, stderr) {
+               callback(error, step.body + "\n" + stdout, stderr)
+            });
+            break;
+        case "application/javascript":
+            require(directoryName +"/" + step.src);
+            break;
+        default:
+            throw new Error("Unrecognised job type");
     }
 }
 
